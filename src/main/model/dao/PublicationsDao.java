@@ -11,6 +11,7 @@ public interface PublicationsDao {
     //void insertPublication(Publications publication);
     List<Publications> getAll();
     List<Publications> getUsersPublications(Integer userId);
+    List<Publications> getUsersPublicationsByUsername(String username);
     void updatePublication(Publications publication);
     void deletePublication(Integer id);
     void insertPublication(long user_id, String name, String genre, String text);

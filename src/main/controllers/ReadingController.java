@@ -15,8 +15,13 @@ import org.springframework.web.servlet.ModelAndView;
  */
 @Controller
 public class ReadingController {
-    @Autowired
+
     private PublicationsServiceInterface publicationsService;
+
+    @Autowired
+    public ReadingController(PublicationsServiceInterface publicationsService) {
+        this.publicationsService = publicationsService;
+    }
 
     @RequestMapping(value="/reading",method = RequestMethod.GET)
     public ModelAndView reading(@RequestParam(name="id", required = false) String publicationId,

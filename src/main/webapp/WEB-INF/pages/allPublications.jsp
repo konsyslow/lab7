@@ -13,15 +13,31 @@
     <title>allPublications</title>
 </head>
 <body>
-<% String message = (String) request.getAttribute("value");%> <a href='logout.jsp'>Log out</a>
+<% String message = (String) request.getAttribute("value");%> <%--<a href='../../logout.jsp'>Log out</a>--%>
 <h1>
-    <%=message%> <%=session.getAttribute("login")%>
+   <%-- <%=message%> <%=session.getAttribute("login")%>--%>
 </h1>
 <h2>
     <a href = '<%= request.getContextPath() %>/welcome'> Welcome</a>
     <a href = '<%= request.getContextPath() %>/listPublications'> My publications</a>
 </h2>
+<c:url value="/logout" var="logoutUrl" />
+<form action="${logoutUrl}" method="post" id="logoutForm">
+    <input type="hidden" name="${_csrf.parameterName}"
+           value="${_csrf.token}" />
+</form>
+<script>
+    function formSubmit() {
+        document.getElementById("logoutForm").submit();
+    }
+</script>
 
+<c:if test="${pageContext.request.userPrincipal.name != null}">
+    <h2>
+        Welcome : ${pageContext.request.userPrincipal.name} | <a
+            href="javascript:formSubmit()"> Logout</a>
+    </h2>
+</c:if>
 <table border="1">
     <thead>
     <tr>

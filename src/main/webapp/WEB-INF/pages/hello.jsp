@@ -3,8 +3,9 @@
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <html>
 <body>
-<h1>Title : ${title}</h1>
-<h1>Message : ${message}</h1>
+<h1>${title}</h1>
+<h1>${message}</h1>
+<h2><a href = '<%= request.getContextPath() %>/login'> login </a></h2>
 
 <sec:authorize access="hasRole('ROLE_USER')">
     <!-- For login user -->

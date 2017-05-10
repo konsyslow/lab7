@@ -32,6 +32,9 @@ public class PublicationsService implements PublicationsServiceInterface {
 
         return publicationsDao.getById(id);
     }
+    public List<Publications> getByUsername(String username){
+        return publicationsDao.getUsersPublicationsByUsername(username);
+    }
     public void update(Publications publication){
         publicationsDao.updatePublication(publication);
     }

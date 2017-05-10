@@ -14,4 +14,5 @@ public interface UserServiceInterface {
     public void delete(Integer id);
     //public UsersInformation create();
     public void insert(String login, String password);
+    Users getUserByLogin(String username);
 }

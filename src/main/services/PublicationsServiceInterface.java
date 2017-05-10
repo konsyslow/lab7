@@ -10,6 +10,7 @@ import java.util.List;
 public interface PublicationsServiceInterface {
     public List<Publications> getAll();
     public Publications get(Integer id);
+    public List<Publications> getByUsername(String username);
     public void delete(Integer id);
     public void update(Publications publication);
    // public UsersInformation create();

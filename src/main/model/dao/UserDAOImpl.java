@@ -130,7 +130,7 @@ public class UserDAOImpl implements UserDAO {
     }
 
     private Users createEntity(ResultSet resultSet) throws SQLException {
-        return new Users(resultSet.getLong("id"),
+        return new Users(resultSet.getInt("id"),
                 resultSet.getString("username"),
                 resultSet.getString("password"),
                 resultSet.getInt("isblocked"));
@@ -144,7 +144,7 @@ public class UserDAOImpl implements UserDAO {
             preparedStatement.setInt(1, id);
             ResultSet rs = preparedStatement.executeQuery();
             while (rs.next()) {
-                Users user = new Users(rs.getLong("id"), rs.getString("username"),
+                Users user = new Users(rs.getInt("id"), rs.getString("username"),
                         rs.getString("password"),rs.getInt("isblocked"));
                 return user;
             }

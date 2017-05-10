@@ -5,7 +5,7 @@ package main.model.pojo;
 public class Publications {
 
     private long id;
-    private long user_id;
+    private int user_id;
     private String name;
     private String genre;
     private String text;
@@ -38,7 +38,7 @@ public class Publications {
         this.id = id;
     }
 
-    public long getUser_id() {
+    public int getUser_id() {
         return user_id;
     }
 

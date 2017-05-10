@@ -14,18 +14,22 @@ import org.springframework.web.servlet.ModelAndView;
  */
 @Controller
 public class RegistrationController {
-    @Autowired
+
     private  UsersInformationInterface usersInformationService;
-    @Autowired
     private  UserServiceInterface userService;
+
+    @Autowired
+    public RegistrationController(UsersInformationInterface usersInformationService, UserServiceInterface userService) {
+        this.usersInformationService = usersInformationService;
+        this.userService = userService;
+    }
 
     @RequestMapping(value="/reg",method = RequestMethod.POST)
     public ModelAndView registration(@RequestParam(name="firstName", required = false) String firstName,
                                          @RequestParam(name="secondName", required = false) String secondName,
                                          @RequestParam(name="lastName", required = false) String lastName,
                                          @RequestParam(name="login", required = false) String login,
-                                         @RequestParam(name="password", required = false) String password,
-                                         Model model) {
+                                         @RequestParam(name="password", required = false) String password) {
         ModelAndView mav = new ModelAndView();
         String hash_pass = null;
         if(firstName=="" && secondName=="" && lastName=="" &&

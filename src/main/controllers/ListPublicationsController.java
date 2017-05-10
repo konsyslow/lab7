@@ -1,15 +1,17 @@
 package main.controllers;
 
-import main.model.pojo.Publications;
 import main.services.PublicationsServiceInterface;
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
-
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
-import java.util.List;
+import java.security.Principal;
+
 
 /**
  * Created by admin on 30.04.2017.
@@ -17,23 +19,27 @@ import java.util.List;
 @Controller
 //@RequestMapping(value="/listPublications")
 public class ListPublicationsController {
-    @Autowired
+    private static final Logger LOGGER = Logger.getLogger(ListPublicationsController.class.getName());
+
     private  PublicationsServiceInterface publicationsService;
 
+    @Autowired
+    public ListPublicationsController(PublicationsServiceInterface publicationsService) {
+        this.publicationsService = publicationsService;
+    }
+
     @RequestMapping(value="/listPublications", method = RequestMethod.GET)
-    public ModelAndView actionsWithList(/*@RequestParam(name="delbutton", required = false) String strButton,*/
-                                        Model model, HttpSession session){
-        ModelAndView mav = new ModelAndView();
-        /*if ( strButton != null) {
-            deleteStudent(strButton);
-            mav.setViewName("redirect:/listPublications");
-        }else{*/
-            Integer userId = Integer.parseInt(session.getAttribute("userId").toString());
-            List<Publications> usersPublications = publicationsService.getUsersPublications(userId);
-            model.addAttribute("usersPublications",usersPublications);
+    public ModelAndView actionsWithList(Model model, HttpSession session, HttpServletRequest request){
+            ModelAndView mav = new ModelAndView();
+            /*String username = ((org.springframework.security.core.userdetails.User)SecurityContextHolder
+                                .getContext().getAuthentication().getPrincipal()).getUsername();*/
+        String username = request.getUserPrincipal().getName();
+        LOGGER.debug("usernaaaaaaaaaaameeee: " + username);
+            //Integer userId = Integer.parseInt(session.getAttribute("userId").toString());
+            //List<Publications> usersPublications = publicationsService.getUsersPublications(userId);
+            model.addAttribute("username1",username);
+            model.addAttribute("usersPublications",publicationsService.getByUsername(username));
             model.addAttribute("value", "Hello,user");
-//            LOGGER.debug("login: " + login);
-       // }
         return mav;
     }
 

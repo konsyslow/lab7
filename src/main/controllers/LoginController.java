@@ -15,11 +15,16 @@ import org.springframework.web.servlet.ModelAndView;
  * Created by admin on 30.04.2017.
  */
 @Controller
-@SessionAttributes({"login","userId"})
+//@SessionAttributes({"login","userId"})
 public class LoginController {
     private static final Logger LOGGER = Logger.getLogger(LoginController.class);
-    @Autowired
+
     private UserServiceInterface userServiceInterface;
+
+    @Autowired
+    public LoginController(UserServiceInterface userServiceInterface) {
+        this.userServiceInterface = userServiceInterface;
+    }
 
     //@RequestMapping(value = "/", method = RequestMethod.GET)
     public String sayHello() {

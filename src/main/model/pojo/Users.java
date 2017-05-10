@@ -4,23 +4,23 @@ package main.model.pojo;
  * Created by admin on 20.04.2017.
  */
 public class Users {
-    private long id;
+    private int id;
     private String login;
     private String password;
     private int isBlocked;
 
-    public Users(long id, String login, String password, int isBlocked) {
+    public Users(int id, String login, String password, int isBlocked) {
         this.id = id;
         this.login = login;
         this.password = password;
         this.isBlocked = isBlocked;
     }
 
-    public long getId() {
+    public int getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(int id) {
         this.id = id;
     }
 

@@ -22,12 +22,16 @@ public class PublicationsDaoImpl implements PublicationsDao {
     //private ConnectionPool connectionPool;
 
     public static final String SELECT_ALL_PUBLICATIONS = "SELECT * FROM PUBLICATIONS WHERE user_id IN " +
-            "(SELECT id FROM users WHERE isblocked = 0)";
+            "(SELECT id FROM users WHERE isblocked = 1)";
     public static final String SELECT_PUBLICATIONS = "SELECT * FROM PUBLICATIONS WHERE user_id = ?";
     public static final String INSERT_PUBLICATIONS = "INSERT INTO PUBLICATIONS (user_id, name, genre, text) VALUES (?,?,?,?)";
     public static final String UPDATE_PUBLICATIONS = "UPDATE PUBLICATIONS SET user_id=?, name=?, genre=?, text=? WHERE id=?";
     public static final String DELETE_PUBLICATION = "DELETE FROM PUBLICATIONS WHERE id=?";
     public static final String GET_BY_ID = "SELECT * FROM PUBLICATIONS where id = ?";
+    public static final String SELECT_PUBLICATIONS_BY_LOGIN = "select publications.id, publications.user_id, " +
+            "publications.name, publications.genre," +
+            " publications.text  from publications, users where publications.user_id = users.id" +
+            " and users.username = ?";
 
     public PreparedStatement getPrepareStatement(String sql) {
         connection = ManagementSystem.getCon();
@@ -92,6 +96,26 @@ public class PublicationsDaoImpl implements PublicationsDao {
         return list;
     }
 
+    public List<Publications> getUsersPublicationsByUsername(String username){
+        List<Publications> list = new ArrayList<Publications>();
+        PreparedStatement preparedStatement = getPrepareStatement(SELECT_PUBLICATIONS_BY_LOGIN);
+        try {
+            preparedStatement.setString(1, username);
+            ResultSet rs = preparedStatement.executeQuery();
+            while (rs.next()) {
+                Publications publication = new Publications(rs.getInt(1), rs.getInt(2),
+                        rs.getString(3), rs.getString(4), rs.getString(5) );
+                list.add(publication);
+            }
+        } catch (SQLException e) {
+            Logger.getLogger(Exception.class.getName()).log(Level.ERROR, "Catch SQLException", e);
+        } finally {
+            closePrepareStatement(preparedStatement);
+        }
+
+        return list;
+    }
+
     public void insertPublication(Publications publication) {
         PreparedStatement preparedStatement = getPrepareStatement(INSERT_PUBLICATIONS);
         try {
@@ -126,7 +150,7 @@ public class PublicationsDaoImpl implements PublicationsDao {
     public void updatePublication(Publications publication){
         PreparedStatement preparedStatement = getPrepareStatement(UPDATE_PUBLICATIONS);
         try {
-            preparedStatement.setLong(1, publication.getUser_id());
+            preparedStatement.setInt(1, publication.getUser_id());
             preparedStatement.setString(2, publication.getName());
             preparedStatement.setString(3, publication.getGenre());
             preparedStatement.setString(4, publication.getText());
