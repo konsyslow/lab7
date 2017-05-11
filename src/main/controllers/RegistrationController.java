@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 /**
  * Created by admin on 01.05.2017.
@@ -41,15 +42,17 @@ public class RegistrationController {
                                          @RequestParam(name="password", required = false) String password) {
         ModelAndView mav = new ModelAndView();
         String hash_pass = null;
+        BCryptPasswordEncoder bCryptPasswordEncoder = null;
         if(firstName=="" && secondName=="" && lastName=="" &&
                 login=="" && password=="") {
             mav.setViewName("redirect:/reg");
         }else{
-            try {
-                hash_pass = PasswordStorage.createHash(password);
-            }catch(PasswordStorage.CannotPerformOperationException e){
+            /*try {*/
+                bCryptPasswordEncoder = new BCryptPasswordEncoder();
+                hash_pass = bCryptPasswordEncoder.encode(password);//= PasswordStorage.createHash(password);
+            /*}catch(PasswordStorage.CannotPerformOperationException e){
                 e.printStackTrace();
-            }
+            }*/
             userService.insert(login,hash_pass);
             usersInformationService.insert(firstName,secondName,lastName);
             rolesService.insertRole(login,"ROLE_ADMIN");
