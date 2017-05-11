@@ -6,6 +6,7 @@
   To change this template use File | Settings | File Templates.
 --%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <!DOCTYPE html>
 <html>
 <head>
@@ -13,7 +14,9 @@
     <title>Registration</title>
 </head>
 <body>
-<form method="post" action="Registration">
+<form method="post" <%--action="Registration"--%>>
+    <input type="hidden" name="${_csrf.parameterName}"
+           value="${_csrf.token}" />
     <center>
         <table border="1" width="30%" cellpadding="5">
             <thead>
@@ -45,9 +48,6 @@
             <tr>
                 <td><input type="submit" value="Submit" /></td>
                 <td><input type="reset" value="Reset" /></td>
-            </tr>
-            <tr>
-                <td colspan="2">Already registered!! <a href="../../login.jsp">Login Here</a></td>
             </tr>
             </tbody>
         </table>

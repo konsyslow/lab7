@@ -1,5 +1,6 @@
 package main.controllers;
 
+import main.model.pojo.Roles;
 import main.services.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -17,11 +18,19 @@ public class RegistrationController {
 
     private  UsersInformationInterface usersInformationService;
     private  UserServiceInterface userService;
+    private RolesServiceInterface rolesService;
 
     @Autowired
-    public RegistrationController(UsersInformationInterface usersInformationService, UserServiceInterface userService) {
+    public RegistrationController(UsersInformationInterface usersInformationService, UserServiceInterface userService,
+                                  RolesServiceInterface rolesService) {
         this.usersInformationService = usersInformationService;
         this.userService = userService;
+        this.rolesService = rolesService;
+    }
+
+    @RequestMapping(value="/reg",method = RequestMethod.GET)
+    public String showReg(Model model){
+        return "reg";
     }
 
     @RequestMapping(value="/reg",method = RequestMethod.POST)
@@ -43,8 +52,22 @@ public class RegistrationController {
             }
             userService.insert(login,hash_pass);
             usersInformationService.insert(firstName,secondName,lastName);
-            mav.setViewName("redirect:/");
+            rolesService.insertRole(login,"ROLE_ADMIN");
+            mav.setViewName("redirect:/login");
         }
         return mav;
     }
+/*
+    @RequestMapping(value = "/reg", method = RequestMethod.GET)
+    public ModelAndView login(@RequestParam(value = "error", required = false) String error) {
+
+        ModelAndView model = new ModelAndView();
+        if (error != null) {
+            model.addObject("error", "Invalid username and password!");
+        }
+        model.setViewName("reg");
+
+        return model;
+
+    }*/
 }
