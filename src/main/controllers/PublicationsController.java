@@ -7,14 +7,13 @@ import main.services.UserServiceInterface;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import javax.validation.Valid;
 import java.util.List;
 
 /**
@@ -45,15 +44,18 @@ public class PublicationsController {
                 name = publication.getName();
                 genre = publication.getGenre();
                 text = publication.getText();
+                user_id = "" + publication.getUser_id();
             }
 
         }
         String username = request.getUserPrincipal().getName();
         Users user = userService.getUserByLogin(username);
 
-        model.addAttribute("name",name);
+        /*model.addAttribute("name",name);
         model.addAttribute("genre",genre);
-        model.addAttribute("text",text);
+        model.addAttribute("text",text);*/
+        Publications publications = new Publications(0,0,name,genre,text);
+        model.addAttribute("publications", publications);
         model.addAttribute("username1",username);
         model.addAttribute("userid",user.getId());
         return mav;
@@ -61,31 +63,37 @@ public class PublicationsController {
 
     @RequestMapping(value="/publications",method = RequestMethod.POST)
     public ModelAndView actionsWithPublications(@RequestParam(name="id", required = false) String id,
-                                         @RequestParam(name="name", required = false) String name,
-                                         @RequestParam(name="genre", required = false) String genre,
-                                         @RequestParam(name="text", required = false) String text,
-                                                HttpSession session, HttpServletRequest request) {
+                                                @RequestParam(name="name", required = false) String name,
+                                                @RequestParam(name="genre", required = false) String genre,
+                                                @RequestParam(name="text", required = false) String text,
+                                                HttpSession session, HttpServletRequest request,
+                                                @Valid @ModelAttribute("publications")Publications publications
+                                                    /*@Valid final Publications publicationsForm*/, final BindingResult result) {
 
         ModelAndView mav = new ModelAndView();
-        try {
-            //Integer userId = Integer.parseInt(session.getAttribute("userId").toString());
-            String username = request.getUserPrincipal().getName();
-            Users user = userService.getUserByLogin(username);
+        if (result.hasErrors()) {
+            mav.setViewName("publications");
+        }else {
+            try {
+                //Integer userId = Integer.parseInt(session.getAttribute("userId").toString());
+                String username = request.getUserPrincipal().getName();
+                Users user = userService.getUserByLogin(username);
 
-            if ((id == null) || ("null".equals(id))) {
-                publicationsService.insert(user.getId(), name, genre, text);
-            } else {
-                Publications publication = publicationsService.get(Integer.parseInt(id));
-                publication.setUser_id(user.getId());
-                publication.setName(name);
-                publication.setGenre(genre);
-                publication.setText(text);
-                publicationsService.update(publication);
+                if ((id == null) || ("null".equals(id))) {
+                    publicationsService.insert(user.getId(), name, genre, text);
+                } else {
+                    Publications publication = publicationsService.get(Integer.parseInt(id));
+                    publication.setUser_id(user.getId());
+                    publication.setName(name);
+                    publication.setGenre(genre);
+                    publication.setText(text);
+                    publicationsService.update(publication);
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
             }
-        }catch(Exception e){
-            e.printStackTrace();
+            mav.setViewName("redirect:/listPublications");
         }
-        mav.setViewName("redirect:/listPublications");
         return mav;
     }
 }

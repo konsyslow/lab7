@@ -46,12 +46,12 @@ public class ListPublicationsController {
     @RequestMapping(value="/delete/{usersPublicationsId}", method = RequestMethod.GET)
     public String deletePublication(@PathVariable("usersPublicationsId") String usersPublicationsId){
 
-        deleteStudent(usersPublicationsId);
+        deletePub(usersPublicationsId);
         return "redirect:/listPublications";
     }
 
 
-    private void deleteStudent(String id){
+    private void deletePub(String id){
         if (id.matches("\\d+")) {
             publicationsService.delete(Integer.parseInt(id));
         }

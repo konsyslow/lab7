@@ -18,5 +18,6 @@ public interface UserDAO {
     Users get(Integer id);
     void updateUser(Users user);
     void deleteUser(Integer id);
+    void blockUnblockUser(Integer id, Integer enable);
 
 }

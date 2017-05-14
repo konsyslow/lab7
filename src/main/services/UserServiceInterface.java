@@ -15,4 +15,5 @@ public interface UserServiceInterface {
     //public UsersInformation create();
     public void insert(String login, String password);
     Users getUserByLogin(String username);
+    public void blockUnblockUser(Integer id, Integer enable);
 }

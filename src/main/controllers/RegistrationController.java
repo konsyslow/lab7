@@ -55,7 +55,7 @@ public class RegistrationController {
             }*/
             userService.insert(login,hash_pass);
             usersInformationService.insert(firstName,secondName,lastName);
-            rolesService.insertRole(login,"ROLE_ADMIN");
+            rolesService.insertRole(login,"ROLE_USER");
             mav.setViewName("redirect:/login");
         }
         return mav;

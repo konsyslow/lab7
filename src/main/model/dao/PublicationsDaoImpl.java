@@ -15,14 +15,13 @@ import java.util.List;
  */
 public class PublicationsDaoImpl implements PublicationsDao {
     static{
-        PropertyConfigurator.configure("C:\\Users\\admin\\Documents\\lab3_Suslov_KV\\lab3\\lo4j.properties");
+        PropertyConfigurator.configure("C:\\Users\\admin\\Documents\\lab6.1\\src\\main\\resources\\log4j.properties");
     }
 
     private Connection connection;
-    //private ConnectionPool connectionPool;
 
     public static final String SELECT_ALL_PUBLICATIONS = "SELECT * FROM PUBLICATIONS WHERE user_id IN " +
-            "(SELECT id FROM users WHERE isblocked = 1)";
+            "(SELECT id FROM users WHERE enable = 1)";
     public static final String SELECT_PUBLICATIONS = "SELECT * FROM PUBLICATIONS WHERE user_id = ?";
     public static final String INSERT_PUBLICATIONS = "INSERT INTO PUBLICATIONS (user_id, name, genre, text) VALUES (?,?,?,?)";
     public static final String UPDATE_PUBLICATIONS = "UPDATE PUBLICATIONS SET user_id=?, name=?, genre=?, text=? WHERE id=?";
@@ -40,7 +39,6 @@ public class PublicationsDaoImpl implements PublicationsDao {
             ps = connection.prepareStatement(sql);
         } catch (SQLException e) {
             Logger.getLogger(Exception.class.getName()).log(Level.ERROR, "Catch SQLException", e);
-            e.printStackTrace();
         }
 
         return ps;

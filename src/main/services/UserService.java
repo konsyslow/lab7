@@ -28,9 +28,9 @@ public class UserService implements UserServiceInterface {
         //Users user = userDAO.findUserByLoginAndPassword(login, password);
         Users user = userDAO.findUserByLogin(login);
 
-        if (user != null && user.isBlocked()==0) {
+        if (user != null && user.isEnable()==0) {
             return null;
-        }else if(user != null && user.isBlocked()==1){
+        }else if(user != null && user.isEnable()==1){
             try {
                 boolean b = PasswordStorage.verifyPassword(password, user.getPassword());
                 if(b==false){
@@ -41,14 +41,11 @@ public class UserService implements UserServiceInterface {
                 return null;
             }
         }
-       // logger.debug("user not blocked");
-
         return user;
     }
 
     public void insert(String login, String password){
-        //Users users = new Users();
-        Users user = new Users( 0,  login,  password,  0);
+        Users user = new Users( 0,  login,  password,  1);
         userDAO.insertUser(user);
     }
 
@@ -62,11 +59,11 @@ public class UserService implements UserServiceInterface {
     public Users getUserByLogin(String username) {
         return userDAO.findUserByLogin(username);
     }
-
-
     public void delete(Integer id) {
         userDAO.deleteUser(id);
     }
 
-
+    public void blockUnblockUser(Integer id, Integer enable) {
+        userDAO.blockUnblockUser(id,enable);
+    }
 }

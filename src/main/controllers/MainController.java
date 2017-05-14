@@ -29,7 +29,7 @@ public class MainController {
 
     }
 
-    @RequestMapping(value = "/admin**", method = RequestMethod.GET)
+    //@RequestMapping(value = "/admin**", method = RequestMethod.GET)
     public ModelAndView adminPage() {
 
         ModelAndView model = new ModelAndView();

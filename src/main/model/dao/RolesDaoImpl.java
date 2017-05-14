@@ -18,14 +18,15 @@ import java.sql.SQLException;
 @Component
 public class RolesDaoImpl implements RolesDao {
     static{
-        PropertyConfigurator.configure("C:\\Users\\admin\\Documents\\lab3_Suslov_KV\\lab3\\lo4j.properties");
+        PropertyConfigurator.configure("C:\\Users\\admin\\Documents\\lab6.1\\src\\main\\resources\\log4j.properties");
     }
     public static final String FIND_ROLE_BY_USERNAME = "SELECT * FROM users_roles WHERE username = ?";
     public static final String INSERT_ROLES = "INSERT INTO users_roles" +
             "(username, role) VALUES(?, ?)";
+    private Connection connection;
 
     public PreparedStatement getPrepareStatement(String sql) {
-        Connection connection = ManagementSystem.getCon();
+        connection = ManagementSystem.getCon();
         PreparedStatement ps = null;
         try {
             ps = connection.prepareStatement(sql);
@@ -40,6 +41,7 @@ public class RolesDaoImpl implements RolesDao {
         if (ps != null) {
             try {
                 ps.close();
+                connection.close();
             } catch (SQLException e) {
                 Logger.getLogger(Exception.class.getName()).log(Level.ERROR, "Catch SQLException", e);
             }

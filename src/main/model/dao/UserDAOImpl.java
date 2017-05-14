@@ -7,6 +7,7 @@ import org.apache.log4j.Logger;
 import org.apache.log4j.PropertyConfigurator;
 
 import java.sql.*;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -14,29 +15,23 @@ import java.util.List;
  */
 public class UserDAOImpl implements UserDAO {
     static{
-        PropertyConfigurator.configure("C:\\Users\\admin\\Documents\\lab3_Suslov_KV\\lab3\\lo4j.properties");
+        PropertyConfigurator.configure("C:\\Users\\admin\\Documents\\lab6.1\\src\\main\\resources\\log4j.properties");
     }
-//private static final Logger LOGGER = Logger.getLogger(UserDAOImpl.class);
-    //private Connection connection;
-    // private ConnectionPool connectionPool;
 
     public static final String SELECT_ALL_USERS = "SELECT * FROM USERS";
     public static final String INSERT_USERS = "INSERT INTO USERS" +
-            "(username, password, isblocked) VALUES(?, ?, ?)";
+            "(username, password, enable) VALUES(?, ?, ?)";
     public static final String UPDATE_USERS = "UPDATE users SET " +
             "username=?, password=? WHERE id=?";
     public static final String DELETE_USER = "DELETE FROM users WHERE id=?";
     public static final String FIND_USER = "SELECT * FROM users WHERE username = ? AND password = ?";
     public static final String FIND_USER_BY_LOGIN = "SELECT * FROM users WHERE username = ?";
     public static final String GET_BY_ID = "SELECT * FROM users where id = ?";
-
-//    public UserDAOImpl(Connection connection){//}, ConnectionPool connectionPool) {
-//        this.connection = connection;
-//        //this.connectionPool = connectionPool;
-//    }
+    public static final String BLOCK_USER = "UPDATE users SET enable = ? WHERE id=?";
+    private Connection connection;
 
     public PreparedStatement getPrepareStatement(String sql) {
-        Connection connection = ManagementSystem.getCon();
+        connection = ManagementSystem.getCon();
         PreparedStatement ps = null;
         try {
             ps = connection.prepareStatement(sql);
@@ -51,21 +46,20 @@ public class UserDAOImpl implements UserDAO {
         if (ps != null) {
             try {
                 ps.close();
+                connection.close();
             } catch (SQLException e) {
                 Logger.getLogger(Exception.class.getName()).log(Level.ERROR, "Catch SQLException", e);
             }
         }
     }
 
-
-    //public void insertUser(String login, String password) {
     public void insertUser(Users user) {
         PreparedStatement preparedStatement = getPrepareStatement(INSERT_USERS);
         try {
             //preparedStatement.setLong(1, usersInformation.getId());
             preparedStatement.setString(1, user.getLogin());
             preparedStatement.setString(2, user.getPassword());
-            preparedStatement.setLong(3, user.isBlocked());
+            preparedStatement.setLong(3, user.isEnable());
             preparedStatement.executeUpdate();
         } catch (SQLException e) {
             Logger.getLogger(Exception.class.getName()).log(Level.ERROR, "Catch SQLException", e);
@@ -75,7 +69,22 @@ public class UserDAOImpl implements UserDAO {
     }
 
     public List<Users> getAll() {
-        return null;
+        List<Users> list = new ArrayList<Users>();
+        PreparedStatement preparedStatement = getPrepareStatement(SELECT_ALL_USERS);
+        try {
+            ResultSet rs = preparedStatement.executeQuery();
+            while (rs.next()) {
+                Users users = new Users(rs.getInt(1), rs.getString(2),
+                        rs.getString(3), rs.getInt(4));
+                list.add(users);
+            }
+        } catch (SQLException e) {
+            Logger.getLogger(Exception.class.getName()).log(Level.ERROR, "Catch SQLException", e);
+        } finally {
+            closePrepareStatement(preparedStatement);
+        }
+
+        return list;
     }
 
     public void updateUser(Users user) {
@@ -133,19 +142,17 @@ public class UserDAOImpl implements UserDAO {
         return new Users(resultSet.getInt("id"),
                 resultSet.getString("username"),
                 resultSet.getString("password"),
-                resultSet.getInt("isblocked"));
+                resultSet.getInt("enable"));
     }
 
     public Users get(Integer id){
         PreparedStatement preparedStatement = getPrepareStatement(GET_BY_ID);
         try {
-//            Statement statement = connection.createStatement();
-//            ResultSet result = statement.executeQuery("SELECT * FROM USERS WHERE id = " + id.toString());
             preparedStatement.setInt(1, id);
             ResultSet rs = preparedStatement.executeQuery();
             while (rs.next()) {
                 Users user = new Users(rs.getInt("id"), rs.getString("username"),
-                        rs.getString("password"),rs.getInt("isblocked"));
+                        rs.getString("password"),rs.getInt("enable"));
                 return user;
             }
         } catch (SQLException e) {
@@ -154,5 +161,18 @@ public class UserDAOImpl implements UserDAO {
             closePrepareStatement(preparedStatement);
         }
         return null;
+    }
+
+    public void blockUnblockUser(Integer id, Integer enable) {
+        PreparedStatement preparedStatement = getPrepareStatement(BLOCK_USER);
+        try {
+            preparedStatement.setInt(1, enable);
+            preparedStatement.setInt(2, id);
+            preparedStatement.execute();
+        } catch (SQLException e){
+            Logger.getLogger(Exception.class.getName()).log(Level.ERROR, "Catch SQLException", e);
+        }finally {
+            closePrepareStatement(preparedStatement);
+        }
     }
 }

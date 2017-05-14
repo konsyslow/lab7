@@ -15,11 +15,8 @@ import java.util.List;
  */
 public class UsersInformationDaoImpl implements UsersInformationDao {
     static{
-        PropertyConfigurator.configure("C:\\Users\\admin\\Documents\\lab3_Suslov_KV\\lab3\\lo4j.properties");
+        PropertyConfigurator.configure("C:\\Users\\admin\\Documents\\lab6.1\\src\\main\\resources\\log4j.properties");
     }
-
-    //private Connection connection;
-   // private ConnectionPool connectionPool;
 
     public static final String SELECT_ALL_USERSINFORMATION = "SELECT * FROM USERS_INFORMATION";
     public static final String INSERT_USERSINFORMATION = "INSERT INTO USERS_INFORMATION" +
@@ -28,14 +25,10 @@ public class UsersInformationDaoImpl implements UsersInformationDao {
             "firstname=?, secondname=?, lastname=? WHERE id=?";
     public static final String DELETE_USERSINFORMATION = "DELETE FROM USERS_INFORMATION WHERE id=?";
     public static final String GET_BY_ID = "SELECT * FROM USERS_INFORMATION where id = ?";
-
-//    public UsersInformationDaoImpl(Connection connection){//}, ConnectionPool connectionPool) {
-//        this.connection = connection;
-//        //this.connectionPool = connectionPool;
-//    }
+    private Connection connection;
 
     public PreparedStatement getPrepareStatement(String sql) {
-        Connection connection = ManagementSystem.getCon();
+        connection = ManagementSystem.getCon();
         PreparedStatement ps = null;
         try {
             ps = connection.prepareStatement(sql);
@@ -50,6 +43,7 @@ public class UsersInformationDaoImpl implements UsersInformationDao {
         if (ps != null) {
             try {
                 ps.close();
+                connection.close();
             } catch (SQLException e) {
                Logger.getLogger(Exception.class.getName()).log(Level.ERROR, "Catch SQLException", e);
             }
@@ -64,10 +58,6 @@ public class UsersInformationDaoImpl implements UsersInformationDao {
             while (rs.next()) {
                 UsersInformation usersInformation = new UsersInformation(rs.getInt(1), rs.getString(2),
                         rs.getString(3), rs.getString(4));
-//                usersInformation.setId(rs.getInt(1));
-//                usersInformation.setFirstName(rs.getString(2));
-//                usersInformation.setSecondName(rs.getString(3));
-//                usersInformation.setLastName(rs.getString(4));
                 list.add(usersInformation);
             }
         } catch (SQLException e) {

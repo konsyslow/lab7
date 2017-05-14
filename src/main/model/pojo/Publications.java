@@ -2,12 +2,20 @@ package main.model.pojo;
 /**
  * Created by admin on 15.04.2017.
  */
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 public class Publications {
 
     private long id;
     private int user_id;
+    @NotNull
+    @Size(min=3, max=20)
     private String name;
+    @NotNull
+    @Size(min=3, max=20)
     private String genre;
+    @NotNull
+    @Size(min=3, max=700)
     private String text;
 
     public Publications(int id, int user_id, String name, String genre, String text) {

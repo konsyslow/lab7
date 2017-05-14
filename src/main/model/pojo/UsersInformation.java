@@ -1,14 +1,23 @@
 package main.model.pojo;
 
 
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
+
 /**
  * Created by admin on 15.04.2017.
  */
 public class UsersInformation {
 
     private long id;
+    @NotNull
+    @Size(min=3, max=20)
     private String firstName;
+    @NotNull
+    @Size(min=3, max=20)
     private String secondName;
+    @NotNull
+    @Size(min=3, max=20)
     private String lastName;
 
     public UsersInformation(long id, String firstName, String secondName, String lastName) {
