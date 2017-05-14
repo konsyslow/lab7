@@ -17,7 +17,6 @@ import java.security.Principal;
  * Created by admin on 30.04.2017.
  */
 @Controller
-//@RequestMapping(value="/listPublications")
 public class ListPublicationsController {
     private static final Logger LOGGER = Logger.getLogger(ListPublicationsController.class.getName());
 
@@ -49,7 +48,6 @@ public class ListPublicationsController {
         deletePub(usersPublicationsId);
         return "redirect:/listPublications";
     }
-
 
     private void deletePub(String id){
         if (id.matches("\\d+")) {

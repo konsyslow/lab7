@@ -23,6 +23,7 @@ public class ListUsersController {
     private   UsersInformationInterface informationService;
     private UserServiceInterface userService;
 
+    @Autowired
     public ListUsersController(UsersInformationInterface service, UserServiceInterface userService) {
         this.informationService = service;
         this.userService = userService;

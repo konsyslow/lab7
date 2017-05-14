@@ -17,7 +17,6 @@ import org.springframework.web.servlet.ModelAndView;
 @Controller
 public class MainController {
 
-    //@RequestMapping(value = { "/", "/welcome**" }, method = RequestMethod.GET)
     @RequestMapping(value = "/", method = RequestMethod.GET)
     public ModelAndView defaultPage() {
 
@@ -25,17 +24,6 @@ public class MainController {
         model.addObject("title", "Welcome to literary portal");
         model.addObject("message", "Please, log in");
         model.setViewName("hello");
-        return model;
-
-    }
-
-    //@RequestMapping(value = "/admin**", method = RequestMethod.GET)
-    public ModelAndView adminPage() {
-
-        ModelAndView model = new ModelAndView();
-        model.addObject("title", "Spring Security Login Form - Database Authentication");
-        model.addObject("message", "This page is for ROLE_ADMIN only!");
-        model.setViewName("admin");
         return model;
 
     }

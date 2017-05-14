@@ -8,11 +8,11 @@ import javax.validation.constraints.Size;
  */
 public class Users {
     private int id;
-    @NotNull
-    @Size(min=3, max=20)
+    @NotNull(message = "Please enter your login")
+    @Size(min=3, max=20, message = "size should be between 3 and 20 characters")
     private String login;
-    @NotNull
-    @Size(min=5, max=200)
+    @NotNull(message = "Please enter your password")
+    @Size(min=5, max=200, message = "size should be more than 5 characters")
     private String password;
     private int enable;
 
@@ -21,6 +21,9 @@ public class Users {
         this.login = login;
         this.password = password;
         this.enable = enable;
+    }
+
+    public Users() {
     }
 
     public int getId() {
